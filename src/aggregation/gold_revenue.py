@@ -47,3 +47,12 @@ def aggregate_mrr_reporting(spark: SparkSession, storage_account_name: str):
     spark.sql(f"OPTIMIZE delta.`{gold_path}` ZORDER BY (subscription_tier)")
     
     print("Gold layer aggregation complete.")
+
+
+    # --- EXECUTION BLOCK ---
+if __name__ == "__main__":
+    from src.config.spark_config import configure_spark_abfs
+    # 1. Authenticate and get storage account name
+    storage_account = configure_spark_abfs(spark)
+    # 2. Run the aggregation
+    aggregate_mrr_reporting(spark, storage_account)

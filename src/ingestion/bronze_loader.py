@@ -36,5 +36,14 @@ def ingest_raw_transactions(spark: SparkSession, storage_account_name: str):
     print("Bronze ingestion complete. Pipeline idempotent and ready for next batch.")
 
 # If running directly in a Databricks notebook context for testing:
-# storage_account = "stfintechdatalake"
-# ingest_raw_transactions(spark, storage_account)
+#storage_account = "stfintechdatalake"
+#ingest_raw_transactions(spark, storage_account)
+
+
+# --- EXECUTION BLOCK ---
+if __name__ == "__main__":
+    from src.config.spark_config import configure_spark_abfs
+    # 1. Authenticate and get storage account name
+    storage_account = configure_spark_abfs(spark)
+    # 2. Run the ingestion
+    ingest_raw_transactions(spark, storage_account)

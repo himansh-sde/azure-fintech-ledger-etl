@@ -56,3 +56,12 @@ def process_silver_scd2(spark: SparkSession, storage_account_name: str):
         }
     ).execute()
     print("Silver merge complete.")
+
+
+    # --- EXECUTION BLOCK ---
+if __name__ == "__main__":
+    from src.config.spark_config import configure_spark_abfs
+    # 1. Authenticate and get storage account name
+    storage_account = configure_spark_abfs(spark)
+    # 2. Run the processing
+    process_silver_scd2(spark, storage_account)
