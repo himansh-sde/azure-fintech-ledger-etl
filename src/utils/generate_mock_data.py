@@ -32,4 +32,4 @@ batch_2 = [
 if __name__ == "__main__":
     print("Generating mock data batches...")
     generate_batch(1, batch_1)
-    # generate_batch(2, batch_2) # We will run this later to test the Silver Merge!
+    generate_batch(2, batch_2) # We will run this later to test the Silver Merge!
