@@ -64,5 +64,5 @@ if __name__ == "__main__":
     )
     
     # When you are ready to test the Silver Merge logic, comment out Batch 1 above and uncomment below:
-    # print("Generating Batch 2 and streaming directly to ADLS Gen2...")
-    # upload_to_adls_gen2(STORAGE_ACCOUNT, "bronze", "raw_json", batch_2)
+    print("Generating Batch 2 and streaming directly to ADLS Gen2...")
+    upload_to_adls_gen2(STORAGE_ACCOUNT, "bronze", "raw_json", batch_2)
