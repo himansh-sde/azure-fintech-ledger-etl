@@ -1,6 +1,6 @@
 # src/aggregation/gold_revenue.py
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, count, when, lit, current_date
+from pyspark.sql.functions import col, count, when, lit, current_date, round
 
 def aggregate_mrr_reporting(spark: SparkSession, storage_account_name: str):
     """
@@ -29,7 +29,7 @@ def aggregate_mrr_reporting(spark: SparkSession, storage_account_name: str):
         .otherwise(lit(0.00))
     ).withColumn(
         "total_mrr", 
-        col("total_active_users") * col("tier_price")
+        round(col("total_active_users") * col("tier_price"), 2) # Added rounding here
     ).withColumn(
         "report_date", 
         current_date()
