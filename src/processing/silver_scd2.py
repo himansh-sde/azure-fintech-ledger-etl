@@ -1,24 +1,29 @@
 # src/processing/silver_scd2.py
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, lit
+from pyspark.sql.functions import col, lit, row_number, desc
+from pyspark.sql.window import Window
 from delta.tables import DeltaTable
 
 def process_silver_scd2(spark: SparkSession, storage_account_name: str):
-    """
-    Merges new transactions into the Silver Delta table, maintaining historical 
-    records using SCD Type 2 logic and the NULL merge key pattern.
-    """
     bronze_path = f"abfss://bronze@{storage_account_name}.dfs.core.windows.net/delta_table/"
     silver_path = f"abfss://silver@{storage_account_name}.dfs.core.windows.net/user_profiles/"
 
     print("1. Reading updates from Bronze...")
-    df_updates = spark.read.format("delta").load(bronze_path)
+    df_raw_updates = spark.read.format("delta").load(bronze_path)
 
     # -------------------------------------------------------------------------
-    # INTERVIEW GOLD: Safely checking if a Delta table exists.
-    # We use .limit(1).count() to force Eager Evaluation. If the path is missing,
-    # PySpark throws an error immediately, which we catch to trigger the initial load.
+    # INTERVIEW GOLD: Source Deduplication
+    # Delta MERGE fails if the source has multiple rows for the same target row.
+    # We use a Window function to isolate the latest transaction per user.
     # -------------------------------------------------------------------------
+    print("1.5 Deduplicating source data to prevent merge conflicts...")
+    window_spec = Window.partitionBy("user_id").orderBy(desc("transaction_date"))
+    
+    df_updates = df_raw_updates.withColumn("rn", row_number().over(window_spec)) \
+                               .filter(col("rn") == 1) \
+                               .drop("rn")
+
+    # --- Proceed with the EAGER EVALUATION try/except block below exactly as before ---
     try:
         spark.read.format("delta").load(silver_path).limit(1).count()
         table_exists = True
