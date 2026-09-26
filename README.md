@@ -107,6 +107,7 @@ The codebase is structured like a traditional software engineering project, leve
 └── README.md
 
 ```
+---
 
 ## 🚀 How to Run
 1. Deploy Infrastructure: Navigate to /infrastructure and run terraform init -> terraform apply.
