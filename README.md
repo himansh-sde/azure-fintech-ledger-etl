@@ -9,7 +9,7 @@
 To guarantee data integrity, a custom PySpark observability script runs as the final automated task. It validates exact record counts, schema integrity, and MRR calculations across all Medallion layers before downstream BI tools refresh.
 
 <div align="center">
-  <img src="images/validator_script_output.pngg" alt="Data Validation Report Console Output">
+  <img src="images/validator_script_output.png" alt="Data Validation Report Console Output">
   <p><i>Automated terminal output proving successful execution and accurate MRR aggregations.</i></p>
 </div>
 
@@ -106,6 +106,7 @@ The codebase is structured like a traditional software engineering project, leve
 │       └── pipeline_validator.py # Data observability and integrity checks
 └── README.md
 
+```
 
 ## 🚀 How to Run
 1. Deploy Infrastructure: Navigate to /infrastructure and run terraform init -> terraform apply.
